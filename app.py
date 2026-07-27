@@ -147,8 +147,8 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="teal", neutral_hue="slate")) as
     ---
     ### 👨‍💻 About the Developer
     **Created by:** Deepak Chahal
-    * **LinkedIn:** [Connect with me](YOUR_LINKEDIN_URL_HERE)
-    * **GitHub:** [Check out my projects](YOUR_GITHUB_URL_HERE)
+    * **LinkedIn:** [Connect with me](https://www.linkedin.com/in/deepak-chahal-694073404?utm_source=share_via&utm_content=profile&utm_medium=member_android)
+    * **GitHub:** [Check out my projects](https://github.com/deepak-1765)
     """)
 
     # Wire up the logic exactly in the order of the dataset
