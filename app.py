@@ -1,30 +1,84 @@
-# app.py
-
-# --- CHANGED BLOCK START ---
 import gradio as gr
+import numpy as np
 import joblib
-import spaces
+from tensorflow.keras.models import load_model
 
-# We load the model once when the app starts
-deployed_lr = joblib.load('my_first_ml_model.pkl')
+# ===============================
+# Load Model & Scaler
+# ===============================
 
-# --- ZERO-GPU DECORATOR AND PREDICTION LOGIC ---
-@spaces.GPU
-def predict_rent(size_of_prop):
-    # The model expects a 2D array: [[size]]
-    prediction = deployed_lr.predict([[size_of_prop]])
-    # Extract the single prediction value and format it
-    return f"Estimated Rent: {prediction[0]:.2f}"
+model = load_model("breast_cancer_model.h5")
+scaler = joblib.load("breast_cancer_scaler.pkl")
 
-# Create the web interface
-interface = gr.Interface(
-    fn=predict_rent,
-    inputs=gr.Number(label="Please Enter the Size of Your Property for rent"),
-    outputs=gr.Text(label="Predicted Rent"),
-    title="Property Rent Predictor",
-    description="Enter the property size to get a rent estimate powered by Machine Learning."
+# ===============================
+# Prediction Function
+# ===============================
+
+def predict(
+    radius_mean,
+    texture_mean,
+    perimeter_mean,
+    area_mean,
+    smoothness_mean,
+    compactness_mean,
+    concavity_mean,
+    concave_points_mean,
+    symmetry_mean,
+    fractal_dimension_mean,
+):
+
+    data = np.array([[
+        radius_mean,
+        texture_mean,
+        perimeter_mean,
+        area_mean,
+        smoothness_mean,
+        compactness_mean,
+        concavity_mean,
+        concave_points_mean,
+        symmetry_mean,
+        fractal_dimension_mean
+    ]])
+
+    data = scaler.transform(data)
+
+    prediction = model.predict(data, verbose=0)
+
+    probability = float(prediction[0][0])
+
+    if probability >= 0.5:
+        result = "🔴 Malignant (Cancer Detected)"
+        confidence = probability * 100
+    else:
+        result = "🟢 Benign (No Cancer)"
+        confidence = (1 - probability) * 100
+
+    return result, f"{confidence:.2f}%"
+
+# ===============================
+# Interface
+# ===============================
+
+demo = gr.Interface(
+    fn=predict,
+    inputs=[
+        gr.Number(label="Radius Mean"),
+        gr.Number(label="Texture Mean"),
+        gr.Number(label="Perimeter Mean"),
+        gr.Number(label="Area Mean"),
+        gr.Number(label="Smoothness Mean"),
+        gr.Number(label="Compactness Mean"),
+        gr.Number(label="Concavity Mean"),
+        gr.Number(label="Concave Points Mean"),
+        gr.Number(label="Symmetry Mean"),
+        gr.Number(label="Fractal Dimension Mean"),
+    ],
+    outputs=[
+        gr.Textbox(label="Prediction"),
+        gr.Textbox(label="Confidence"),
+    ],
+    title="Breast Cancer Detection",
+    description="Predict whether the tumor is Benign or Malignant using a Deep Learning model.",
 )
 
-if __name__ == "__main__":
-    interface.launch()
-# --- CHANGED BLOCK END ---
+demo.launch(server_name="0.0.0.0", server_port=7860)
