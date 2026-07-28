@@ -60,7 +60,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="teal")) as app:
         run=gr.Button("🔍 Run Neural Network Analysis",variant="primary")
         clear=gr.ClearButton(components=comps+[out],value="🗑 Clear All")
     run.click(predict_cancer,inputs=comps,outputs=out)
-    gr.Markdown("### 👨‍💻 Developer\nReplace with your GitHub/LinkedIn links.")
+    gr.Markdown("### 👨‍💻 Developer\nhttps://www.linkedin.com/in/deepak-chahal-694073404?utm_source=share_via&utm_content=profile&utm_medium=member_android")
 
 if __name__=="__main__":
     port=int(os.environ.get("PORT",10000))
