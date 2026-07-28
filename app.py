@@ -13,7 +13,7 @@ import tensorflow as tf
 try:
     # --- CODE BLOCK: UPDATED FILENAME TO MATCH GITHUB REPO ---
     # Changed from 'breast_cancer_scaler.pkl' to 'breast_cancer_model.pkl'
-    scaler = joblib.load('breast_cancer_model.pkl')
+    scaler = joblib.load('breast_cancer_scaler.pkl')
     # ---------------------------------------------------------
     deployed_nn = tf.keras.models.load_model('breast_cancer_model.h5')
     print("Scaler and Deep Learning Model loaded successfully!")
