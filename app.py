@@ -10,15 +10,44 @@ import tensorflow as tf
 # ==========================================================
 # Load the Scaler and TensorFlow Model
 # ==========================================================
+
+import traceback
+
+scaler = None
+deployed_nn = None
+
 try:
-    # --- CODE BLOCK: UPDATED FILENAME TO MATCH GITHUB REPO ---
-    # Changed from 'breast_cancer_scaler.pkl' to 'breast_cancer_model.pkl'
-    scaler = joblib.load('breast_cancer_scaler.pkl')
-    # ---------------------------------------------------------
-    deployed_nn = tf.keras.models.load_model('breast_cancer_model.h5')
-    print("Scaler and Deep Learning Model loaded successfully!")
-except Exception as e:
-    print(f"Warning: Files not found or error loading. {e}")
+    print("=" * 60)
+    print("Checking repository files...")
+
+    print("Current directory:", os.getcwd())
+    print("Files present:", os.listdir())
+
+    print("\nLoading PKL file...")
+
+    scaler = joblib.load("breast_cancer_model.pkl")
+
+    print("PKL loaded successfully!")
+    print("Object Type:", type(scaler))
+    print("Object:", scaler)
+
+    print("\nLoading H5 model...")
+
+    deployed_nn = tf.keras.models.load_model(
+        "breast_cancer_model.h5",
+        compile=False
+    )
+
+    print("H5 Model loaded successfully!")
+
+    print("=" * 60)
+
+except Exception:
+    print("=" * 60)
+    print("MODEL LOADING ERROR")
+    print(traceback.format_exc())
+    print("=" * 60)
+
     scaler = None
     deployed_nn = None
 
@@ -44,6 +73,7 @@ def predict_cancer(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10):
         0.001784   # fractal dimension error mode
     ]
 
+    # --- CODE BLOCK: UPDATED WORST FEATURES (CHANGES MADE HERE) ---
     # 3. Hardcoded Worst features using the actual dataset modes you provided
     preassumed_worst_features = [
         12.36,    # worst radius mode
@@ -57,6 +87,7 @@ def predict_cancer(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10):
         0.2226,   # worst symmetry mode
         0.07427   # worst fractal dimension mode
     ]
+    # --------------------------------------------------------------
 
     # 4. Combine all arrays to perfectly match the 30 features the neural network expects
     full_30_features = user_mean_features + preassumed_error_features + preassumed_worst_features
@@ -132,8 +163,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="teal", neutral_hue="slate")) as
     gr.Markdown("""
     ---
     ### 👨‍💻 About the Developer
-    **Created by:** Deepak Chahal (Full Stack Developer)
-    * **GitHub:** [Check out my projects](https://github.com/deepak-1765)
+    **Created by:** Deepak Chahal
+    * **LinkedIn:** [Connect with me](https://www.linkedin.com/in/deepak-chahal-694073404?utm_source=share_via&utm_content=profile&utm_medium=member_android)
+    * **GitHub:** [Check out my projects](https://github.com/Deepak-1765)
     """)
 
     # Wire up the logic mapped only to the 10 visible sliders
